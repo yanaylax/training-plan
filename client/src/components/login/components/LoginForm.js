@@ -40,12 +40,12 @@ export default function LoginForm() {
   const onSubmit = (e) => {
     e.preventDefault();
 
-    if (!email && !password) return;
-
     const userData = {
       email,
       password,
     };
+
+    if (!email || !password) return;
 
     dispatch(login(userData));
   };
