@@ -94,7 +94,7 @@ export default function CreateSession() {
         value={session.description}
         placeholder="Description"
       />
-      <button type="submit">ADD NEW TASK</button>
+      <button type="submit">ADD NEW SESSION</button>
     </CreateSessionForm>
   );
 }
