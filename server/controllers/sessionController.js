@@ -83,10 +83,22 @@ const clearTrainingPlan = asyncHandler(async (req, res) => {
   res.status(200).json(sessions);
 });
 
+const updateAllSessions = asyncHandler(async (req, res) => {
+  const sessions = req.body;
+  const newSessions = sessions.map(async (session) => {
+    return await Session.updateOne(
+      { _id: session._id },
+      { inPlan: session.inPlan, index: session.index }
+    );
+  });
+  res.status(200).json(newSessions);
+});
+
 module.exports = {
   getSessions,
   addSession,
   deleteSession,
   updateSession,
   clearTrainingPlan,
+  updateAllSessions,
 };

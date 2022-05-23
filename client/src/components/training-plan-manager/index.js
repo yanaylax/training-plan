@@ -10,6 +10,9 @@ import {
   getSessions,
   onDragEnd,
   reset,
+  sessionBank,
+  sessionPlan,
+  updateAllSessions,
 } from "../../redux/sessions/sessionsSlice";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -77,6 +80,9 @@ const TrainingPlanManagerContainer = styled.div`
 
 export default function TrainingPlanManager() {
   const { user } = useSelector((state) => state.auth);
+  const bank = useSelector(sessionBank);
+  const plan = useSelector(sessionPlan);
+  const { updateOnDrag } = useSelector((state) => state.sessions);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -94,7 +100,14 @@ export default function TrainingPlanManager() {
     return () => dispatch(reset());
   }, [navigate, user, dispatch, isError, message]);
 
-  const dragHandler = (result) => {
+  useEffect(() => {
+    if (updateOnDrag) {
+      const sessions = [...bank, ...plan];
+      dispatch(updateAllSessions(sessions));
+    }
+  }, [bank, plan, dispatch, updateOnDrag]);
+
+  const dragHandler = async (result) => {
     dispatch(onDragEnd(result));
   };
 

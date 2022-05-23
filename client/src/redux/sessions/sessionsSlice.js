@@ -8,6 +8,7 @@ const initialState = {
   },
   sessionBank: [],
   trainingPlan: [],
+  updateOnDrag: false,
   isError: false,
   isSuccess: false,
   isLoading: false,
@@ -74,6 +75,24 @@ export const updateSession = createAsyncThunk(
     try {
       const token = thunkAPI.getState().auth.user.token;
       return await sessionsService.updateSession(session, token);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+export const updateAllSessions = createAsyncThunk(
+  "sessions/updateAll",
+  async (sessions, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().auth.user.token;
+      return await sessionsService.updateAllSessions(sessions, token);
     } catch (error) {
       const message =
         (error.response &&
@@ -158,6 +177,7 @@ export const sessionsSlice = createSlice({
           index: index,
         }));
       }
+      state.updateOnDrag = true;
     },
   },
   extraReducers: (builder) => {
@@ -253,6 +273,19 @@ export const sessionsSlice = createSlice({
         state.trainingPlan = [];
       })
       .addCase(clearTrainingPlan.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+      })
+      .addCase(updateAllSessions.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(updateAllSessions.fulfilled, (state) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.updateOnDrag = false;
+      })
+      .addCase(updateAllSessions.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;

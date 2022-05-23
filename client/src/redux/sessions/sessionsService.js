@@ -42,6 +42,15 @@ const updateSession = async (session, token) => {
   return session;
 };
 
+const updateAllSessions = async (sessions, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  return await axios.post(API_URL + "updateAll", sessions, config);
+};
+
 const clearTrainingPlan = async (token) => {
   const config = {
     headers: {
@@ -58,6 +67,7 @@ const sessionsService = {
   deleteSession,
   updateSession,
   clearTrainingPlan,
+  updateAllSessions,
 };
 
 export default sessionsService;
