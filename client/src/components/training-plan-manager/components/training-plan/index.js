@@ -7,8 +7,11 @@ import SingleSession from "../single-session";
 
 export default function TrainingPlan() {
   const sessionList = useSelector(sessionPlan);
-  const mappedList = sessionList
-    ? sessionList.map((session, index) => {
+  const sortedList = sessionList
+    .slice()
+    .sort((first, second) => first.index - second.index);
+  const mappedList = sortedList
+    ? sortedList.map((session, index) => {
         return (
           <SingleSession
             key={session._id}
